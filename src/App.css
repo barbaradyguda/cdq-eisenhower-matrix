@@ -50,6 +50,11 @@
   text-align: left;
 }
 
+.Square:hover {
+  box-shadow: 0 0 5px white;
+  transform: scale(1.01)
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
 /* @media (prefers-reduced-motion: no-preference) {

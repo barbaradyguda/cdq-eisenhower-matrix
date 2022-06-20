@@ -10,6 +10,9 @@ import {
   Box,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const style = {
   position: "absolute" as "absolute",
@@ -22,8 +25,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
-const label = { inputProps: { "aria-label": "Switch demo" } };
 
 interface Props {
   urgentImportantTasks: Task[];
@@ -48,13 +49,12 @@ const Form = ({
 }: Props) => {
   const [urgent, setUrgent] = useState<boolean>(true);
   const [important, setImportant] = useState<boolean>(true);
-  const [id, setId] = useState<number>();
   const [title, setTitle] = useState<string>("");
   const [comment, setComment] = useState<string>("");
-  const [deadline, setDeadline] = useState<number>();
+  const [deadline, setDeadline] = React.useState<Date | null>(new Date());
   const [category, setCategory] = useState<string>("");
-  const [isDone, setIsDone] = useState<boolean>();
   const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState("");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -64,12 +64,14 @@ const Form = ({
     setTitle("");
     setComment("");
     setCategory("");
-    setIsDone(undefined);
   };
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    console.debug("here");
+    if (!title) {
+      setError("title");
+      return false;
+    }
     if (urgent && important) {
       setUrgentImportantTasks([
         ...urgentImportantTasks,
@@ -79,7 +81,7 @@ const Form = ({
           id: Date.now(),
           title: title || " ",
           comment: comment || " ",
-          deadline: Date.now(),
+          deadline: new Date(),
           category: category || " ",
           isDone: false,
         },
@@ -93,7 +95,7 @@ const Form = ({
           id: Date.now(),
           title: title || " ",
           comment: comment || " ",
-          deadline: Date.now(),
+          deadline: new Date(),
           category: category || " ",
           isDone: false,
         },
@@ -107,7 +109,7 @@ const Form = ({
           id: Date.now(),
           title: title || " ",
           comment: comment || " ",
-          deadline: Date.now(),
+          deadline: new Date(),
           category: category || " ",
           isDone: false,
         },
@@ -121,20 +123,21 @@ const Form = ({
           id: Date.now(),
           title: title || " ",
           comment: comment || " ",
-          deadline: Date.now(),
+          deadline: new Date(),
           category: category || " ",
           isDone: false,
         },
       ]);
     }
-
+    setError("");
     clearForm();
     handleClose();
   };
 
+
   return (
     <>
-      <Button variant="contained" onClick={handleOpen} sx={{ width: "64%" }}>
+      <Button variant="contained" onClick={handleOpen} sx={{ width: {lg: "64%", md: "80%", xs:"90%"} }}>
         <AddIcon sx={{ marginRight: 2 }} />
         Add new task
       </Button>
@@ -146,61 +149,94 @@ const Form = ({
       >
         <Box sx={style}>
           <form className="Form" id="form" onSubmit={handleAdd}>
-            <Typography id="server-modal-title" variant="h5" component="h2" color="primary" sx={{mb:2}}>
-             Add a new task
+            <Typography
+              id="server-modal-title"
+              variant="h5"
+              component="h2"
+              color="primary"
+              sx={{ mb: 2 }}
+            >
+              Add a new task
             </Typography>
-            {/* <Typography id="server-modal-description" sx={{ pt: 2, mb:2 }} color="primary">
-              If you disable JavaScript, you will still see me.
-            </Typography> */}
-            <div style={{display: "flex", flexDirection: "column", justifyContent: "left", width: "80%"}}>
-            <div style={{ display: "flex", alignItems: "center", padding:4 }}>
-              <Switch
-                checked={urgent}
-                onChange={(e) => setUrgent(!urgent)}
-                inputProps={{ "aria-label": "controlled" }}
-              />
-              <Typography color="primary" sx={{ml:1}}>urgent</Typography>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", padding:4  }}>
-              <Switch
-                checked={important}
-                onChange={(e) => setImportant(!important)}
-                inputProps={{ "aria-label": "controlled" }}
-              />
-              <Typography color="primary" sx={{ml:1}}>important</Typography>
-            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "left",
+                width: "80%",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", padding: 4 }}
+              >
+                <Switch
+                  checked={urgent}
+                  onChange={(e) => setUrgent(!urgent)}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+                <Typography  sx={{ ml: 1, color: "white" }}>
+                  urgent
+                </Typography>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", padding: 4 }}
+              >
+                <Switch
+                  checked={important}
+                  onChange={(e) => setImportant(!important)}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+                <Typography color="primary" sx={{ ml: 1, color: "white" }}>
+                  important
+                </Typography>
+              </div>
 
-            <TextField
-              id="outlined-basic"
-              label="Enter a task"
-              variant="outlined"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              sx={{ margin:1 }}
-            />
-            <TextField
-              id="outlined-basic"
-              label="Enter a comment"
-              variant="outlined"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              sx={{ margin:1 }}
-            />
-            <TextField
-              id="outlined-basic"
-              label="Enter a category"
-              variant="outlined"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              sx={{ margin:1 }}
-            />
+              <TextField
+                id="outlined-basic"
+                label="Enter a task"
+                variant="outlined"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                error={error === "title"}
+                helperText={error === "title" && "required"}
+                sx={{ margin: 1 }}
+              />
+              <TextField
+                id="outlined-basic"
+                label="Enter a comment"
+                variant="outlined"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                sx={{ margin: 1 }}
+              />
+
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                {urgent && (
+                  <DatePicker
+                    label="Deadline"
+                    value={deadline}
+                    onChange={(newValue) => setDeadline(newValue)}
+                    renderInput={(props) => (
+                      <TextField {...props} sx={{ margin: 1 }} />
+                    )}
+                  />
+                )}
+              </LocalizationProvider>
+              <TextField
+                id="outlined-basic"
+                label="Enter a category"
+                variant="outlined"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                sx={{ margin: 1 }}
+              />
             </div>
             <Button
               variant="contained"
               className="Button"
               type="submit"
               form="form"
-              sx={{marginTop: 4, marginBottom: 2, width: "40%"}}
+              sx={{ marginTop: 4, marginBottom: 2, width: "40%" }}
             >
               Add task
             </Button>
@@ -211,7 +247,4 @@ const Form = ({
   );
 };
 
-export default Form;
-function e(e: any) {
-  throw new Error("Function not implemented.");
-}
+export default Form
