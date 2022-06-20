@@ -1,10 +1,10 @@
 export interface Task {
-    urgent?: boolean;
-    important?: boolean;
+    urgent: boolean;
+    important: boolean;
     id?: number;
     title: string;
-    comment: string;
+    comment?: string;
     deadline?: number;
     category?: string; 
-    isDone?: boolean;
+    isDone: boolean;
 }

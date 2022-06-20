@@ -4,7 +4,7 @@ import "../../App.css";
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import MatrixSquare from "./matrixSquare";
+import MatrixSquare from "./singleTask";
 
 interface Props {
   urgentImportantTasks: Task[];
@@ -36,20 +36,55 @@ const Matrix = ({
           display: "flex",
           justifyContent: "center",
           marginTop: 8,
-        }} 
+          paddingBottom: 10,
+          minHeight: 210,
+        }}
       >
-        <Grid container spacing={2} sx={{ width: "80%" }}>
-          <Grid item xs={6} style={{ backgroundColor: "#fae8d6", border: "4px solid #282c34"}}>
-          <MatrixSquare urgentImportantTasks={urgentImportantTasks} urgentTasks={[]} importantTasks={[]} otherTasks={[]} />
+  
+        <Grid container spacing={2} sx={{ width: "64%" }}>
+          <Grid
+            item
+            xs={6}
+            style={{ backgroundColor: "#fae8d6", border: "4px solid #282c34" }}
+          >
+       <Typography variant="h6" sx={{pb:2}}> Urgent & Important</Typography> 
+            {urgentImportantTasks &&
+              urgentImportantTasks.map((urgentImportantTask) => (
+                <MatrixSquare singleTask={urgentImportantTask} />
+              ))}
           </Grid>
-          <Grid item xs={6} style={{ backgroundColor: "#f3ebd1", border: "4px solid #282c34"}}>
-          <MatrixSquare urgentTasks={urgentTasks} urgentImportantTasks={[]} importantTasks={[]} otherTasks={[]} />
+          <Grid
+            item
+            xs={6}
+            style={{ backgroundColor: "#f3ebd1", border: "4px solid #282c34" }}
+          >
+                   <Typography variant="h6" sx={{pb:2}}> Urgent</Typography> 
+            {urgentTasks &&
+              urgentTasks.map((urgentTask) => (
+                <MatrixSquare singleTask={urgentTask} />
+              ))}
           </Grid>
-          <Grid item xs={6} style={{ backgroundColor: "#ffecba", border: "4px solid #282c34"}}>
-          <MatrixSquare importantTasks={importantTasks} urgentImportantTasks={[]} urgentTasks={[]} otherTasks={[]} />
+          <Grid
+            item
+            xs={6}
+            style={{ backgroundColor: "#ffecba", border: "4px solid #282c34" }}
+          >
+              <Typography variant="h6" sx={{pb:2}}>  Important</Typography> 
+            {importantTasks &&
+              importantTasks.map((importantTask) => (
+                <MatrixSquare singleTask={importantTask} />
+              ))}
           </Grid>
-          <Grid item xs={6} style={{ backgroundColor: "#dbe6e3", border: "4px solid #282c34"}}>
-          <MatrixSquare otherTasks={otherTasks} urgentImportantTasks={[]} urgentTasks={[]} importantTasks={[]} />
+          <Grid
+            item
+            xs={6}
+            style={{ backgroundColor: "#dbe6e3", border: "4px solid #282c34" }}
+          >
+              <Typography variant="h6" sx={{pb:2}}> Not urgent & Not important</Typography> 
+            {otherTasks &&
+              otherTasks.map((otherTask) => (
+                <MatrixSquare singleTask={otherTask} />
+              ))}
           </Grid>
         </Grid>
       </Box>

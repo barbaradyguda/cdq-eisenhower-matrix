@@ -3,9 +3,9 @@ import "./App.css";
 import { TabClassKey, Typography } from "@mui/material";
 import Form from "./components/form";
 import { Task } from "./model";
-import List from "./components/list";
 import { Category } from "@mui/icons-material";
 import Matrix from "./components/matrix";
+import {initialValuesUI, initialValuesU, initialValuesI, initialValuesO} from "./initialValues"
 
 // let name: string = "basia";
 // let age: number | string = 22;
@@ -34,11 +34,6 @@ import Matrix from "./components/matrix";
 //   city: "blue",
 // };
 
-// let lotsOfPeople: Person[] = [
-//   { name: "test1" },
-//   { name: "test2", age: "twthree" },
-// ];
-
 // let personName: unknown;
 
 // let printName: (name: string) => unknown;
@@ -47,13 +42,12 @@ const App: React.FC = () => {
   const [task, setTask] = useState<Task>({} as Task);
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  const [urgentImportantTasks, setUrgentImportantTasks] = useState<Task[]>([]);
-  const [urgentTasks, setUrgentTasks] = useState<Task[]>([]);
-  const [importantTasks, setImportantTasks] = useState<Task[]>([]);
-  const [otherTasks, setOtherTasks] = useState<Task[]>([]);
+  const [urgentImportantTasks, setUrgentImportantTasks] = useState<Task[]>(initialValuesUI);
+  const [urgentTasks, setUrgentTasks] = useState<Task[]>(initialValuesU);
+  const [importantTasks, setImportantTasks] = useState<Task[]>(initialValuesI);
+  const [otherTasks, setOtherTasks] = useState<Task[]>(initialValuesO);
 
-
-console.log(urgentImportantTasks)
+  console.log(urgentImportantTasks);
   return (
     <div className="App">
       <Typography className="Header">Eisenhover Matrix</Typography>
@@ -68,16 +62,16 @@ console.log(urgentImportantTasks)
         setOtherTasks={setOtherTasks}
       />
 
-      <Matrix 
-       urgentImportantTasks={urgentImportantTasks}
-       setUrgentImportantTasks={setUrgentImportantTasks}
-       urgentTasks={urgentTasks}
-       setUrgentTasks={setUrgentTasks}
-       importantTasks={importantTasks}
-       setImportantTasks={setImportantTasks}
-       otherTasks={otherTasks}
-       setOtherTasks={setOtherTasks}
-       />
+      <Matrix
+        urgentImportantTasks={urgentImportantTasks}
+        setUrgentImportantTasks={setUrgentImportantTasks}
+        urgentTasks={urgentTasks}
+        setUrgentTasks={setUrgentTasks}
+        importantTasks={importantTasks}
+        setImportantTasks={setImportantTasks}
+        otherTasks={otherTasks}
+        setOtherTasks={setOtherTasks}
+      />
     </div>
   );
 };
