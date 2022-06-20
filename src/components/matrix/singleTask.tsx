@@ -3,6 +3,7 @@ import { Task } from "../../model";
 import "../../App.css";
 import { Typography, Stack, IconButton } from "@mui/material";
 import { Edit, Delete, Done } from "@mui/icons-material";
+import { useDrag } from "react-dnd";
 
 interface Props {
   index: number;
@@ -11,7 +12,19 @@ interface Props {
   handleDelete: (id: number, singleTask: Task) => void;
 }
 
-const MatrixSquare = ({ index, singleTask, handleDone,handleDelete }: Props) => {
+const MatrixSquare = ({
+  index,
+  singleTask,
+  handleDone,
+  handleDelete,
+}: Props) => {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "div",
+    item: {id: index},
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
   const getBackgroundColor = (task: Task) => {
     if (task.urgent && task.important) {
       return "#F3C79B";
@@ -35,9 +48,10 @@ const MatrixSquare = ({ index, singleTask, handleDone,handleDelete }: Props) => 
       return "#5A8176";
     }
   };
-
+  isDragging && console.log(singleTask.id)
   return (
     <div
+    ref={drag}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -48,11 +62,13 @@ const MatrixSquare = ({ index, singleTask, handleDone,handleDelete }: Props) => 
         marginBottom: 16,
         backgroundColor: getBackgroundColor(singleTask),
         borderRadius: 8,
-        opacity: singleTask.isDone ? 0.6 : 1,
+        opacity: (singleTask.isDone ? 0.6 : 1),
         transition: "0.2s",
+        border: isDragging ? "5px solid red":"1px solid blue"
       }}
       className={"Square"}
     >
+  
       <div
         style={{
           display: "flex",
@@ -61,17 +77,20 @@ const MatrixSquare = ({ index, singleTask, handleDone,handleDelete }: Props) => 
         }}
       >
         <Typography
-          sx={{ 
+          sx={{
             fontSize: 20,
-             fontWeight: 800, 
-             textTransform: "uppercase",
-             textDecoration: singleTask.isDone ? "line-through" : "none"
-            }}
+            fontWeight: 800,
+            textTransform: "uppercase",
+            textDecoration: singleTask.isDone ? "line-through" : "none",
+          }}
         >
           {" "}
-      {singleTask.title}
+          {singleTask.title}
         </Typography>
-        <Typography variant="caption" sx={{ color: getColor(singleTask), textTransform: "uppercase" }}>
+        <Typography
+          variant="caption"
+          sx={{ color: getColor(singleTask), textTransform: "uppercase" }}
+        >
           {" "}
           {singleTask.category}
         </Typography>
@@ -97,11 +116,11 @@ const MatrixSquare = ({ index, singleTask, handleDone,handleDelete }: Props) => 
           <IconButton aria-label="delete" size="small">
             <Edit sx={{ color: getColor(singleTask) }} />
           </IconButton>
-          <IconButton 
-          aria-label="delete"
-           size="small"
-           onClick={() => handleDelete(singleTask.id, singleTask)}
-            >
+          <IconButton
+            aria-label="delete"
+            size="small"
+            onClick={() => handleDelete(singleTask.id, singleTask)}
+          >
             <Delete sx={{ color: getColor(singleTask) }} />
           </IconButton>
           <IconButton

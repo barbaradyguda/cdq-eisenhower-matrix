@@ -5,6 +5,7 @@ import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import MatrixSquare from "./singleTask";
+import { useDrop } from "react-dnd";
 
 interface Props {
   urgentImportantTasks: Task[];
@@ -33,6 +34,24 @@ const Matrix = ({
     importantTasks,
     otherTasks,
   ];
+
+  const [square, setSquare] = useState([]);
+  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+    accept: "div",
+   drop: (item: any) => addTaskToSquare(item.id),
+    collect: (monitor: any) => ({
+      isOver: !!monitor.isOver(),
+      canDrop: monitor.canDrop,
+    }),
+  }));
+
+  const addTaskToSquare = (id: number) => {
+    // const tasksList = taskType.filter((task) => id === task.id);
+    // setSquare((square) => [...square, tasksList[0]]);
+  };
+
+  let xx = taskTypes.map((t)=>t.map((yy)=>yy[4]))
+  console.log("xx", xx)
 
   const handleDone = (id: number, singleTask: Task) => {
     {
@@ -155,22 +174,27 @@ const Matrix = ({
           spacing={2}
           sx={{ width: { lg: "64%", md: "80%", xs: "90%" } }}
         >
-          {taskTypes &&
-            taskTypes.map((taskType) => (
-              <Grid
-                item
-                xs={6}
-                style={{
-                  backgroundColor: "#fae8d6",
-                  border: "4px solid #282c34",
-                }}
-              >
-                <Typography variant="h6" sx={{ pb: 2, color: "#E4801B" }}>
-                  {getSquareTitle(taskType)}
-                </Typography>
-                {getTasks(taskType)}
-              </Grid>
-            ))}
+          
+            {taskTypes &&
+              taskTypes.map((taskType) => (
+             
+                <Grid
+                  item
+                  xs={6}
+                  style={{
+                    backgroundColor: "#fae8d6",
+                    border: "4px solid #282c34",
+                  }}
+                  ref={drop}
+                >
+                  <Typography variant="h6" sx={{ pb: 2, color: "#E4801B" }}>
+                    {getSquareTitle(taskType)}
+                  </Typography>
+                  {getTasks(taskType)}
+                </Grid>
+            
+              ))}
+         
         </Grid>
       </Box>
     </>
