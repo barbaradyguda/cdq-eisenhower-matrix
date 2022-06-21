@@ -11,11 +11,7 @@ import {
   initialValuesO,
 } from "./initialValues";
 
-
 const App: React.FC = () => {
-  const [task, setTask] = useState<Task>({} as Task);
-  const [tasks, setTasks] = useState<Task[]>([]);
-
   const [urgentImportantTasks, setUrgentImportantTasks] =
     useState<Task[]>(initialValuesUI);
   const [urgentTasks, setUrgentTasks] = useState<Task[]>(initialValuesU);
@@ -23,34 +19,32 @@ const App: React.FC = () => {
   const [otherTasks, setOtherTasks] = useState<Task[]>(initialValuesO);
 
   return (
-   
-      <div className="App">
-        <Typography variant="h1" className="Header">
-          Eisenhower Matrix
-        </Typography>
-        <Form
-          urgentImportantTasks={urgentImportantTasks}
-          setUrgentImportantTasks={setUrgentImportantTasks}
-          urgentTasks={urgentTasks}
-          setUrgentTasks={setUrgentTasks}
-          importantTasks={importantTasks}
-          setImportantTasks={setImportantTasks}
-          otherTasks={otherTasks}
-          setOtherTasks={setOtherTasks}
-        />
+    <div className="App">
+      <Typography variant="h1" className="Header">
+        Eisenhower Matrix
+      </Typography>
+      <Form
+        urgentImportantTasks={urgentImportantTasks}
+        setUrgentImportantTasks={setUrgentImportantTasks}
+        urgentTasks={urgentTasks}
+        setUrgentTasks={setUrgentTasks}
+        importantTasks={importantTasks}
+        setImportantTasks={setImportantTasks}
+        otherTasks={otherTasks}
+        setOtherTasks={setOtherTasks}
+      />
 
-        <Matrix
-          urgentImportantTasks={urgentImportantTasks}
-          setUrgentImportantTasks={setUrgentImportantTasks}
-          urgentTasks={urgentTasks}
-          setUrgentTasks={setUrgentTasks}
-          importantTasks={importantTasks}
-          setImportantTasks={setImportantTasks}
-          otherTasks={otherTasks}
-          setOtherTasks={setOtherTasks}
-        />
-      </div>
-  
+      <Matrix
+        urgentImportantTasks={urgentImportantTasks}
+        setUrgentImportantTasks={setUrgentImportantTasks}
+        urgentTasks={urgentTasks}
+        setUrgentTasks={setUrgentTasks}
+        importantTasks={importantTasks}
+        setImportantTasks={setImportantTasks}
+        otherTasks={otherTasks}
+        setOtherTasks={setOtherTasks}
+      />
+    </div>
   );
 };
 

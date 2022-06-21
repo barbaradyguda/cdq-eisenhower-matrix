@@ -1,4 +1,5 @@
 import { Task } from "./model";
+import { ItemTypes } from "./ItemTypes";
 
 export let initialValuesUI: Task[] = [
   {
@@ -10,6 +11,8 @@ export let initialValuesUI: Task[] = [
     deadline: new Date(),
     category: "customer service",
     isDone: false,
+    accepts: [ItemTypes.DIV], 
+    lastDroppedItem: null
   },
   {
     urgent: true,
@@ -20,6 +23,8 @@ export let initialValuesUI: Task[] = [
     deadline: new Date(),
     category: "customer service",
     isDone: false,
+    accepts: [ItemTypes.DIV], 
+    lastDroppedItem: null
   },
 ];
 
@@ -33,6 +38,8 @@ export let initialValuesU: Task[] = [
     deadline: new Date(),
     category: "employees",
     isDone: false,
+    accepts: [ItemTypes.DIV], 
+    lastDroppedItem: null
   },
   {
     urgent: true,
@@ -43,6 +50,8 @@ export let initialValuesU: Task[] = [
     deadline: new Date(),
     category: "meetings",
     isDone: false,
+    accepts: [ItemTypes.DIV], 
+    lastDroppedItem: null
   },
 ];
 
@@ -54,6 +63,8 @@ export let initialValuesI: Task[] = [
     title: "Learn about SEO",
     category: "education",
     isDone: false,
+    accepts: [ItemTypes.DIV], 
+    lastDroppedItem: null
   },
   {
     urgent: false,
@@ -62,6 +73,8 @@ export let initialValuesI: Task[] = [
     title: "Find new personal trainer",
     category: "sport",
     isDone: false,
+    accepts: [ItemTypes.DIV], 
+    lastDroppedItem: null
   },
 ];
 
@@ -74,6 +87,8 @@ export let initialValuesO: Task[] = [
     comment: "philips?",
     category: "private",
     isDone: false,
+    accepts: [ItemTypes.DIV], 
+    lastDroppedItem: null
   },
   {
     urgent: false,
@@ -82,5 +97,7 @@ export let initialValuesO: Task[] = [
     title: "Read new articles on uxdesign.",
     category: "education",
     isDone: false,
+    accepts: [ItemTypes.DIV], 
+    lastDroppedItem: null
   },
 ];

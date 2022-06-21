@@ -7,4 +7,6 @@ export interface Task {
     deadline?: Date;
     category?: string; 
     isDone: boolean;
+    accepts: string[];
+    lastDroppedItem?: any;
 }

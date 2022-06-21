@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Task } from "../../model";
 import "../../App.css";
 import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import MatrixSquare from "./singleTask";
+import SingleTask from "./SingleTask";
 import { useDrop } from "react-dnd";
+import { ItemTypes } from "../../ItemTypes";
+import Square from "./Square";
 
 interface Props {
   urgentImportantTasks: Task[];
@@ -28,6 +30,8 @@ const Matrix = ({
   otherTasks,
   setOtherTasks,
 }: Props) => {
+
+
   let taskTypes: Array<Task[]> = [
     urgentImportantTasks,
     urgentTasks,
@@ -35,23 +39,105 @@ const Matrix = ({
     otherTasks,
   ];
 
-  const [square, setSquare] = useState([]);
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: "div",
-   drop: (item: any) => addTaskToSquare(item.id),
+  interface ContainerState {
+    accepts: string[];
+    lastDroppedItem: any;
+    id: number;
+  }
+
+  // type test = Person & {
+    //   city: string;
+    // };
+
+  const [containers, setContainers] = useState<ContainerState[]>([
+    {
+      accepts: [ItemTypes.DIV],
+      lastDroppedItem: null,
+      id: 0
+    },
+    {
+      accepts: [ItemTypes.DIV],
+      lastDroppedItem: null,
+      id: 1
+    },
+    {
+      accepts: [ItemTypes.DIV],
+      lastDroppedItem: null,
+      id: 2
+    },
+    {
+      accepts: [ItemTypes.DIV],
+      lastDroppedItem: null,
+      id: 3
+    },
+  ]);
+
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: ItemTypes.DIV,
+    lastDropItem: null,
+    drop: (item: any, monitor) => {
+      handleDrop(item.id, item);
+    },
     collect: (monitor: any) => ({
       isOver: !!monitor.isOver(),
-      canDrop: monitor.canDrop,
+      // canDrop: monitor.canDrop,
     }),
   }));
 
-  const addTaskToSquare = (id: number) => {
-    // const tasksList = taskType.filter((task) => id === task.id);
-    // setSquare((square) => [...square, tasksList[0]]);
-  };
+  const [droppedTasks, setDroppedTasks] = useState<Task[]>([]);
 
-  let xx = taskTypes.map((t)=>t.map((yy)=>yy[4]))
-  console.log("xx", xx)
+  function isDropped(task: Task) {
+    // return droppedTasks.indexOf(task) > -1;
+    return true;
+  }
+
+  const handleDrop = useCallback(
+    (index, item: any) => {
+      setDroppedTasks((droppedTasks[0] = item.singleTask));
+      {
+        item.singleTask.urgent &&
+          item.singleTask.important &&
+          setUrgentImportantTasks(
+            urgentImportantTasks.filter(
+              (urgentImportantTask) =>
+                urgentImportantTask.id !== item.singleTask.id
+            )
+          );
+      }
+      {
+        item.singleTask.urgent &&
+          setUrgentTasks(
+            urgentTasks.filter(
+              (urgentTask) => urgentTask.id !== item.singleTask.id
+            )
+          );
+      }
+      {
+        item.singleTask.important &&
+          setImportantTasks(
+            importantTasks.filter(
+              (importantTask) => importantTask.id !== item.singleTask.id
+            )
+          );
+      }
+      {
+        !item.singleTask.urgent &&
+          !item.singleTask.important &&
+          setOtherTasks(
+            otherTasks.filter(
+              (otherTask) => otherTask.id !== item.singleTask.id
+            )
+          );
+      }
+    },
+    [
+      droppedTasks,
+      urgentImportantTasks,
+      urgentTasks,
+      importantTasks,
+      otherTasks,
+    ]
+  );
 
   const handleDone = (id: number, singleTask: Task) => {
     {
@@ -132,7 +218,7 @@ const Matrix = ({
       case urgentImportantTasks:
         return "Urgent & Important";
       case urgentTasks:
-        return "Urgent ";
+        return "Urgent";
       case importantTasks:
         return "Important";
       case otherTasks:
@@ -142,15 +228,44 @@ const Matrix = ({
     }
   };
 
+  const getSquareTitleColor = (taskType) => {
+    switch (taskType) {
+      case urgentImportantTasks:
+        return "#cb7218";
+        case urgentTasks:
+          return "#d2ae53";
+        case importantTasks:
+          return "#b0922d";
+        case otherTasks:
+          return "#5a8176";
+      default:
+        return " ";
+    }
+  };
+
+  const getBackgroundColor = (taskType) => {
+    switch (taskType) {
+      case urgentImportantTasks:
+        return "#fae8d6";
+      case urgentTasks:
+        return "#f3ebd1";
+      case importantTasks:
+        return "#ffecba";
+      case otherTasks:
+        return "#dbe6e3";
+    }
+  };
+
   const getTasks = (taskType) => {
     return (
       taskType &&
       taskType.map((task, index) => (
-        <MatrixSquare
+        <SingleTask
           index={index}
           singleTask={task}
           handleDone={handleDone}
           handleDelete={handleDelete}
+          // isDropped={isDropped(task)}
         />
       ))
     );
@@ -174,27 +289,30 @@ const Matrix = ({
           spacing={2}
           sx={{ width: { lg: "64%", md: "80%", xs: "90%" } }}
         >
-          
-            {taskTypes &&
-              taskTypes.map((taskType) => (
-             
-                <Grid
-                  item
-                  xs={6}
-                  style={{
-                    backgroundColor: "#fae8d6",
-                    border: "4px solid #282c34",
-                  }}
-                  ref={drop}
-                >
-                  <Typography variant="h6" sx={{ pb: 2, color: "#E4801B" }}>
-                    {getSquareTitle(taskType)}
-                  </Typography>
-                  {getTasks(taskType)}
-                </Grid>
-            
-              ))}
-         
+          {taskTypes &&
+            taskTypes.map((taskType, index) => (
+              <Grid
+                item
+                xs={6}
+                style={{
+                  backgroundColor: getBackgroundColor(taskType),
+                  border: "4px solid #282c34",
+                }}
+              >
+                <Typography variant="h6" sx={{ pb: 2, color: getSquareTitleColor(taskType) }}>
+                  {getSquareTitle(taskType)} ssssquare index:{index}
+                </Typography>
+               <Square 
+               tasks={taskType}
+                handleDone={handleDone}
+                 handleDelete={handleDelete}
+                 accept={[ItemTypes.DIV]}
+                 lastDroppedItem={null}
+                 onDrop={(item) => handleDrop(index, item)}
+                 key={index}
+                 />
+              </Grid>
+            ))}
         </Grid>
       </Box>
     </>

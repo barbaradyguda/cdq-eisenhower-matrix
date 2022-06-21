@@ -4,27 +4,45 @@ import "../../App.css";
 import { Typography, Stack, IconButton } from "@mui/material";
 import { Edit, Delete, Done } from "@mui/icons-material";
 import { useDrag } from "react-dnd";
+import { ItemTypes } from "../../ItemTypes";
 
 interface Props {
   index: number;
   singleTask: Task;
   handleDone: (id: number, singleTask: Task) => void;
   handleDelete: (id: number, singleTask: Task) => void;
+  // isDropped: boolean;
+  // onItemDrag: (singleTask:Task)=>void;
 }
 
-const MatrixSquare = ({
+const SingleTask = ({
   index,
   singleTask,
   handleDone,
   handleDelete,
+  // isDropped,
+  // onItemDrag
 }: Props) => {
+
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: "div",
-    item: {id: index},
+    type: ItemTypes.DIV,
+    item: {singleTask},
+    end: (singleTask, monitor)=>{
+const dropResult = monitor.getDropResult();
+if (singleTask && dropResult && index === 0){
+ 
+  // onItemDrag({...singleTask})
+}
+    },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
+      
     }),
-  }));
+  }),
+  [singleTask, ItemTypes.DIV]
+  );
+
+
   const getBackgroundColor = (task: Task) => {
     if (task.urgent && task.important) {
       return "#F3C79B";
@@ -48,9 +66,10 @@ const MatrixSquare = ({
       return "#5A8176";
     }
   };
-  isDragging && console.log(singleTask.id)
+
   return (
     <div
+    key={index}
     ref={drag}
       style={{
         display: "flex",
@@ -68,7 +87,8 @@ const MatrixSquare = ({
       }}
       className={"Square"}
     >
-  
+   
+  {/* {isDropped ? "successtrue": "tobladtoblad"} */}
       <div
         style={{
           display: "flex",
@@ -136,4 +156,4 @@ const MatrixSquare = ({
   );
 };
 
-export default MatrixSquare;
+export default SingleTask;

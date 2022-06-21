@@ -13,6 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { ItemTypes } from "../../ItemTypes";
 
 const style = {
   position: "absolute" as "absolute",
@@ -84,6 +85,7 @@ const Form = ({
           deadline: new Date(),
           category: category || " ",
           isDone: false,
+          accepts: [ItemTypes.DIV]
         },
       ]);
     } else if (urgent) {
@@ -98,6 +100,7 @@ const Form = ({
           deadline: new Date(),
           category: category || " ",
           isDone: false,
+          accepts: [ItemTypes.DIV]
         },
       ]);
     } else if (important) {
@@ -109,9 +112,9 @@ const Form = ({
           id: Date.now(),
           title: title || " ",
           comment: comment || " ",
-          deadline: new Date(),
           category: category || " ",
           isDone: false,
+          accepts: [ItemTypes.DIV]
         },
       ]);
     } else {
@@ -123,9 +126,9 @@ const Form = ({
           id: Date.now(),
           title: title || " ",
           comment: comment || " ",
-          deadline: new Date(),
           category: category || " ",
           isDone: false,
+          accepts: [ItemTypes.DIV]
         },
       ]);
     }
