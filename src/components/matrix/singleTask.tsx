@@ -20,28 +20,25 @@ const SingleTask = ({
   singleTask,
   handleDone,
   handleDelete,
-  // isDropped,
-  // onItemDrag
-}: Props) => {
-
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.DIV,
-    item: {singleTask},
-    end: (singleTask, monitor)=>{
-const dropResult = monitor.getDropResult();
-if (singleTask && dropResult && index === 0){
- 
-  // onItemDrag({...singleTask})
-}
-    },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-      
+}: // isDropped,
+// onItemDrag
+Props) => {
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: ItemTypes.DIV,
+      item: { singleTask },
+      end: (singleTask, monitor) => {
+        const dropResult = monitor.getDropResult();
+        if (singleTask && dropResult && index === 0) {
+          // onItemDrag({...singleTask})
+        }
+      },
+      collect: (monitor) => ({
+        isDragging: !!monitor.isDragging(),
+      }),
     }),
-  }),
-  [singleTask, ItemTypes.DIV]
+    [singleTask, ItemTypes.DIV]
   );
-
 
   const getBackgroundColor = (task: Task) => {
     if (task.urgent && task.important) {
@@ -69,8 +66,8 @@ if (singleTask && dropResult && index === 0){
 
   return (
     <div
-    key={index}
-    ref={drag}
+      key={index}
+      ref={drag}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -81,14 +78,13 @@ if (singleTask && dropResult && index === 0){
         marginBottom: 16,
         backgroundColor: getBackgroundColor(singleTask),
         borderRadius: 8,
-        opacity: (singleTask.isDone ? 0.6 : 1),
+        opacity: singleTask.isDone ? 0.6 : 1,
         transition: "0.2s",
-        border: isDragging ? "5px solid red":"1px solid blue"
+        border: isDragging ? "5px solid red" : "1px solid blue",
       }}
       className={"Square"}
     >
-   
-  {/* {isDropped ? "successtrue": "tobladtoblad"} */}
+      {/* {isDropped ? "successtrue": "tobladtoblad"} */}
       <div
         style={{
           display: "flex",

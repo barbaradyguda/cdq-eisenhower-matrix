@@ -32,7 +32,7 @@ const Square = ({
 
 
   return (
-    <div style={{ width: "100%" }} ref={drop} >
+    <div style={{ width: "100%", minHeight: 120, height: "100%" }} ref={drop} >
       {tasks &&
         tasks.map((task, index) => (
           <SingleTask

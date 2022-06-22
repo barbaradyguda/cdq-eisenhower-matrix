@@ -30,8 +30,6 @@ const Matrix = ({
   otherTasks,
   setOtherTasks,
 }: Props) => {
-
-
   let taskTypes: Array<Task[]> = [
     urgentImportantTasks,
     urgentTasks,
@@ -46,29 +44,29 @@ const Matrix = ({
   }
 
   // type test = Person & {
-    //   city: string;
-    // };
+  //   city: string;
+  // };
 
   const [containers, setContainers] = useState<ContainerState[]>([
     {
       accepts: [ItemTypes.DIV],
       lastDroppedItem: null,
-      id: 0
+      id: 0,
     },
     {
       accepts: [ItemTypes.DIV],
       lastDroppedItem: null,
-      id: 1
+      id: 1,
     },
     {
       accepts: [ItemTypes.DIV],
       lastDroppedItem: null,
-      id: 2
+      id: 2,
     },
     {
       accepts: [ItemTypes.DIV],
       lastDroppedItem: null,
-      id: 3
+      id: 3,
     },
   ]);
 
@@ -128,6 +126,31 @@ const Matrix = ({
               (otherTask) => otherTask.id !== item.singleTask.id
             )
           );
+      }
+      switch (index) {
+        case 0:
+          droppedTasks[0].urgent = true;
+          droppedTasks[0].important = true;
+          droppedTasks[0].deadline = new Date();
+          return setUrgentImportantTasks([
+            ...urgentImportantTasks,
+            droppedTasks[0],
+          ]);
+        case 1:
+          droppedTasks[0].urgent = true;
+          droppedTasks[0].important = false;
+          droppedTasks[0].deadline = new Date();
+          return setUrgentTasks([...urgentTasks, droppedTasks[0]]);
+        case 2:
+          droppedTasks[0].urgent = false;
+          droppedTasks[0].important = true;
+          droppedTasks[0].deadline = undefined;
+          return setImportantTasks([...importantTasks, droppedTasks[0]]);
+        case 3:
+          droppedTasks[0].urgent = false;
+          droppedTasks[0].important = false;
+          droppedTasks[0].deadline = undefined;
+          return setOtherTasks([...otherTasks, droppedTasks[0]]);
       }
     },
     [
@@ -232,12 +255,12 @@ const Matrix = ({
     switch (taskType) {
       case urgentImportantTasks:
         return "#cb7218";
-        case urgentTasks:
-          return "#d2ae53";
-        case importantTasks:
-          return "#b0922d";
-        case otherTasks:
-          return "#5a8176";
+      case urgentTasks:
+        return "#d2ae53";
+      case importantTasks:
+        return "#b0922d";
+      case otherTasks:
+        return "#5a8176";
       default:
         return " ";
     }
@@ -298,19 +321,23 @@ const Matrix = ({
                   backgroundColor: getBackgroundColor(taskType),
                   border: "4px solid #282c34",
                 }}
+                // ref={drop}
               >
-                <Typography variant="h6" sx={{ pb: 2, color: getSquareTitleColor(taskType) }}>
+                <Typography
+                  variant="h6"
+                  sx={{ pb: 2, color: getSquareTitleColor(taskType) }}
+                >
                   {getSquareTitle(taskType)} ssssquare index:{index}
                 </Typography>
-               <Square 
-               tasks={taskType}
-                handleDone={handleDone}
-                 handleDelete={handleDelete}
-                 accept={[ItemTypes.DIV]}
-                 lastDroppedItem={null}
-                 onDrop={(item) => handleDrop(index, item)}
-                 key={index}
-                 />
+                <Square
+                  tasks={taskType}
+                  handleDone={handleDone}
+                  handleDelete={handleDelete}
+                  accept={[ItemTypes.DIV]}
+                  lastDroppedItem={null}
+                  onDrop={(item) => handleDrop(index, item)}
+                  key={index}
+                />
               </Grid>
             ))}
         </Grid>
