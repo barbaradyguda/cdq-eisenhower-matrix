@@ -8,5 +8,4 @@ export interface Task {
     category?: string; 
     isDone: boolean;
     accepts: string[];
-    lastDroppedItem?: any;
 }

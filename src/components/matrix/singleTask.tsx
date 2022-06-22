@@ -1,38 +1,26 @@
 import React from "react";
 import { Task } from "../../model";
 import "../../App.css";
-import { Typography, Stack, IconButton } from "@mui/material";
+import { Typography, Stack, IconButton, Box } from "@mui/material";
 import { Edit, Delete, Done } from "@mui/icons-material";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "../../ItemTypes";
+import { colors } from "../../colors";
+import { styles } from "./styles";
 
 interface Props {
   index: number;
   singleTask: Task;
   handleDone: (id: number, singleTask: Task) => void;
   handleDelete: (id: number, singleTask: Task) => void;
-  // isDropped: boolean;
-  // onItemDrag: (singleTask:Task)=>void;
+  handleEdit: (id: number, singleTask: Task) => void;
 }
 
-const SingleTask = ({
-  index,
-  singleTask,
-  handleDone,
-  handleDelete,
-}: // isDropped,
-// onItemDrag
-Props) => {
+const SingleTask = ({ index, singleTask, handleDone, handleDelete, handleEdit }: Props) => {
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: ItemTypes.DIV,
       item: { singleTask },
-      end: (singleTask, monitor) => {
-        const dropResult = monitor.getDropResult();
-        if (singleTask && dropResult && index === 0) {
-          // onItemDrag({...singleTask})
-        }
-      },
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
@@ -40,63 +28,36 @@ Props) => {
     [singleTask, ItemTypes.DIV]
   );
 
-  const getBackgroundColor = (task: Task) => {
-    if (task.urgent && task.important) {
-      return "#F3C79B";
-    } else if (task.important) {
-      return "#E6D69F";
-    } else if (task.urgent) {
-      return "#FFD979";
-    } else {
-      return "#B5CCC6";
-    }
-  };
-
   const getColor = (task: Task) => {
     if (task.urgent && task.important) {
-      return "#CB7218";
+      return colors.urgentImportantTasks;
     } else if (task.important) {
-      return "#B0922D";
+      return colors.urgentTasks;
     } else if (task.urgent) {
-      return "#BD8700";
+      return colors.importantTasks;
     } else {
-      return "#5A8176";
+      return colors.otherTasks;
     }
   };
 
   return (
-    <div
+    <Box
       key={index}
       ref={drag}
+      sx={styles.taskContainer}
       style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "left",
-        textAlign: "left",
-        padding: 16,
-        marginRight: 16,
-        marginBottom: 16,
-        backgroundColor: getBackgroundColor(singleTask),
-        borderRadius: 8,
+        backgroundColor: getColor(singleTask) + "0.3)",
         opacity: singleTask.isDone ? 0.6 : 1,
-        transition: "0.2s",
-        border: isDragging ? "5px solid red" : "1px solid blue",
+        borderWidth: isDragging ? "thick" : "thin",
+        borderColor: isDragging
+          ? getColor(singleTask) + "0.2)"
+          : getColor(singleTask) + "1)",
       }}
-      className={"Square"}
     >
-      {/* {isDropped ? "successtrue": "tobladtoblad"} */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <Box sx={styles.taskTitleBox}>
         <Typography
-          sx={{
-            fontSize: 20,
-            fontWeight: 800,
-            textTransform: "uppercase",
+          sx={styles.taskTitle}
+          style={{
             textDecoration: singleTask.isDone ? "line-through" : "none",
           }}
         >
@@ -105,21 +66,15 @@ Props) => {
         </Typography>
         <Typography
           variant="caption"
-          sx={{ color: getColor(singleTask), textTransform: "uppercase" }}
+          sx={styles.taskCategory}
+          style={{ color: getColor(singleTask) + "1)" }}
         >
           {" "}
           {singleTask.category}
         </Typography>
-      </div>
-      <Typography sx={{ opacity: 0.8 }}> {singleTask.comment}</Typography>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: 16,
-        }}
-      >
+      </Box>
+      <Typography sx={styles.taskComment}> {singleTask.comment}</Typography>
+      <Box sx={styles.taskBottomBox}>
         {singleTask.deadline ? (
           <Typography>
             {" "}
@@ -129,26 +84,30 @@ Props) => {
           <span />
         )}
         <Stack direction="row" alignItems="center" spacing={1}>
-          <IconButton aria-label="delete" size="small">
-            <Edit sx={{ color: getColor(singleTask) }} />
+          <IconButton
+            aria-label="delete"
+            size="small"
+            onClick={() => handleEdit(singleTask.id, singleTask)}
+          >
+            <Edit sx={{ color: getColor(singleTask) + "0.9)" }} />
           </IconButton>
           <IconButton
             aria-label="delete"
             size="small"
             onClick={() => handleDelete(singleTask.id, singleTask)}
           >
-            <Delete sx={{ color: getColor(singleTask) }} />
+            <Delete sx={{ color: getColor(singleTask) + "0.9)" }} />
           </IconButton>
           <IconButton
             aria-label="delete"
             size="small"
             onClick={() => handleDone(singleTask.id, singleTask)}
           >
-            <Done sx={{ color: getColor(singleTask) }} />
+            <Done sx={{ color: getColor(singleTask) + "0.9)" }} />
           </IconButton>
         </Stack>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

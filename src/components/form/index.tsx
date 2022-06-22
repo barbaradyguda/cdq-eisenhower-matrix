@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../../App.css";
+import { styles } from "./styles";
 import { Task } from "../../model";
 import {
   Switch,
@@ -15,17 +15,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { ItemTypes } from "../../ItemTypes";
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 interface Props {
   urgentImportantTasks: Task[];
@@ -64,6 +53,7 @@ const Form = ({
     setImportant(true);
     setTitle("");
     setComment("");
+    setDeadline(null);
     setCategory("");
   };
 
@@ -82,10 +72,10 @@ const Form = ({
           id: Date.now(),
           title: title || " ",
           comment: comment || " ",
-          deadline: new Date(),
+          deadline: deadline || new Date(),
           category: category || " ",
           isDone: false,
-          accepts: [ItemTypes.DIV]
+          accepts: [ItemTypes.DIV],
         },
       ]);
     } else if (urgent) {
@@ -97,10 +87,10 @@ const Form = ({
           id: Date.now(),
           title: title || " ",
           comment: comment || " ",
-          deadline: new Date(),
+          deadline: deadline || new Date(),
           category: category || " ",
           isDone: false,
-          accepts: [ItemTypes.DIV]
+          accepts: [ItemTypes.DIV],
         },
       ]);
     } else if (important) {
@@ -114,7 +104,7 @@ const Form = ({
           comment: comment || " ",
           category: category || " ",
           isDone: false,
-          accepts: [ItemTypes.DIV]
+          accepts: [ItemTypes.DIV],
         },
       ]);
     } else {
@@ -128,7 +118,7 @@ const Form = ({
           comment: comment || " ",
           category: category || " ",
           isDone: false,
-          accepts: [ItemTypes.DIV]
+          accepts: [ItemTypes.DIV],
         },
       ]);
     }
@@ -137,62 +127,43 @@ const Form = ({
     handleClose();
   };
 
-
   return (
     <>
-      <Button variant="contained" onClick={handleOpen} sx={{ width: {lg: "64%", md: "80%", xs:"90%"} }}>
-        <AddIcon sx={{ marginRight: 2 }} />
+      <Button variant="contained" onClick={handleOpen} sx={styles.addButton}>
+        <AddIcon sx={styles.addIcon} />
         Add new task
       </Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
+
+      <Modal open={open} onClose={handleClose} aria-labelledby="add-task">
+        <Box sx={styles.modalBox}>
           <form className="Form" id="form" onSubmit={handleAdd}>
             <Typography
               id="server-modal-title"
               variant="h5"
-              component="h2"
               color="primary"
               sx={{ mb: 2 }}
             >
               Add a new task
             </Typography>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "left",
-                width: "80%",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", padding: 4 }}
-              >
+
+            <Box sx={styles.formBox}>
+              <Box sx={styles.switchBox}>
                 <Switch
                   checked={urgent}
                   onChange={(e) => setUrgent(!urgent)}
                   inputProps={{ "aria-label": "controlled" }}
                 />
-                <Typography  sx={{ ml: 1, color: "white" }}>
-                  urgent
-                </Typography>
-              </div>
-              <div
-                style={{ display: "flex", alignItems: "center", padding: 4 }}
-              >
+                <Typography sx={styles.switchText}>urgent</Typography>
+              </Box>
+
+              <Box sx={styles.switchBox}>
                 <Switch
                   checked={important}
                   onChange={(e) => setImportant(!important)}
                   inputProps={{ "aria-label": "controlled" }}
                 />
-                <Typography color="primary" sx={{ ml: 1, color: "white" }}>
-                  important
-                </Typography>
-              </div>
+                <Typography sx={styles.switchText}>important</Typography>
+              </Box>
 
               <TextField
                 id="outlined-basic"
@@ -202,15 +173,15 @@ const Form = ({
                 onChange={(e) => setTitle(e.target.value)}
                 error={error === "title"}
                 helperText={error === "title" && "required"}
-                sx={{ margin: 1 }}
+                sx={styles.textField}
               />
               <TextField
-                id="outlined-basic"
+                id="comment"
                 label="Enter a comment"
                 variant="outlined"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                sx={{ margin: 1 }}
+                sx={styles.textField}
               />
 
               <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -220,26 +191,28 @@ const Form = ({
                     value={deadline}
                     onChange={(newValue) => setDeadline(newValue)}
                     renderInput={(props) => (
-                      <TextField {...props} sx={{ margin: 1 }} />
+                      <TextField {...props} sx={styles.textField} />
                     )}
                   />
                 )}
               </LocalizationProvider>
+
               <TextField
-                id="outlined-basic"
+                id="category"
                 label="Enter a category"
                 variant="outlined"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                sx={{ margin: 1 }}
+                sx={styles.textField}
               />
-            </div>
+            </Box>
+
             <Button
               variant="contained"
               className="Button"
               type="submit"
               form="form"
-              sx={{ marginTop: 4, marginBottom: 2, width: "40%" }}
+              sx={styles.submitButton}
             >
               Add task
             </Button>
@@ -250,4 +223,4 @@ const Form = ({
   );
 };
 
-export default Form
+export default Form;

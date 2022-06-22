@@ -1,13 +1,10 @@
 import React, { useCallback, useState } from "react";
 import { Task } from "../../model";
-import "../../App.css";
-import { Typography } from "@mui/material";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import SingleTask from "./SingleTask";
-import { useDrop } from "react-dnd";
+import { Typography, Grid, Box } from "@mui/material";
 import { ItemTypes } from "../../ItemTypes";
 import Square from "./Square";
+import { colors, backgroundColors } from "../../colors";
+import { styles } from "./styles";
 
 interface Props {
   urgentImportantTasks: Task[];
@@ -39,13 +36,6 @@ const Matrix = ({
     otherTasks,
   ];
 
-  const [drop] = useDrop(() => ({
-    accept: ItemTypes.DIV,
-    drop: (item: any) => {
-      handleDrop(item.id, item);
-    },
-  }));
-
   const handleDrop = useCallback(
     (index: number, item: any) => {
       let droppedTask = droppedTasks[0];
@@ -53,7 +43,8 @@ const Matrix = ({
 
       {
         droppedTask.urgent &&
-          droppedTask.important && index !== 0 &&
+          droppedTask.important &&
+          index !== 0 &&
           setUrgentImportantTasks(
             urgentImportantTasks.filter(
               (urgentImportantTask) => urgentImportantTask.id !== droppedTask.id
@@ -61,13 +52,15 @@ const Matrix = ({
           );
       }
       {
-        droppedTask.urgent && index !== 1 &&
+        droppedTask.urgent &&
+          index !== 1 &&
           setUrgentTasks(
             urgentTasks.filter((urgentTask) => urgentTask.id !== droppedTask.id)
           );
       }
       {
-        droppedTask.important && index !== 2 &&
+        droppedTask.important &&
+          index !== 2 &&
           setImportantTasks(
             importantTasks.filter(
               (importantTask) => importantTask.id !== droppedTask.id
@@ -76,7 +69,8 @@ const Matrix = ({
       }
       {
         !droppedTask.urgent &&
-          !droppedTask.important && index !== 3 &&
+          !droppedTask.important &&
+          index !== 3 &&
           setOtherTasks(
             otherTasks.filter((otherTask) => otherTask.id !== droppedTask.id)
           );
@@ -111,31 +105,37 @@ const Matrix = ({
   };
 
   const collectDroppedUTask = (droppedTask: Task) => {
-    if(!droppedTask.urgent || droppedTask.important){
+    if (!droppedTask.urgent || droppedTask.important) {
       droppedTask.urgent = true;
-    droppedTask.important = false;
-    droppedTask.deadline = new Date();
-    return setUrgentTasks([...urgentTasks, droppedTask]);}
-    else return urgentTasks
+      droppedTask.important = false;
+      droppedTask.deadline = new Date();
+      return setUrgentTasks([...urgentTasks, droppedTask]);
+    } else return urgentTasks;
   };
 
   const collectDroppedITask = (droppedTask: Task) => {
-    if(!droppedTask.important || droppedTask.urgent){
-    droppedTask.urgent = false;
-    droppedTask.important = true;
-    droppedTask.deadline = undefined;
-    return setImportantTasks([...importantTasks, droppedTask]);}
-    else return importantTasks
+    if (!droppedTask.important || droppedTask.urgent) {
+      droppedTask.urgent = false;
+      droppedTask.important = true;
+      droppedTask.deadline = undefined;
+      return setImportantTasks([...importantTasks, droppedTask]);
+    } else return importantTasks;
   };
 
   const collectDroppedOTask = (droppedTask: Task) => {
-    if(droppedTask.important || droppedTask.urgent){
-    droppedTask.urgent = false;
-    droppedTask.important = false;
-    droppedTask.deadline = undefined;
-    return setOtherTasks([...otherTasks, droppedTask]);}
-    else return otherTasks
+    if (droppedTask.important || droppedTask.urgent) {
+      droppedTask.urgent = false;
+      droppedTask.important = false;
+      droppedTask.deadline = undefined;
+      return setOtherTasks([...otherTasks, droppedTask]);
+    } else return otherTasks;
   };
+
+
+const handleEdit=(id: number, singleTask: Task)=>{
+console.log(singleTask)
+}
+
 
   const handleDone = (id: number, singleTask: Task) => {
     {
@@ -221,95 +221,61 @@ const Matrix = ({
         return "Important";
       case otherTasks:
         return "Not urgent & Not important";
+    }
+  };
+
+  const getColor = (taskType: any) => {
+    switch (taskType) {
+      case urgentImportantTasks:
+        return colors.urgentImportantTasks;
+      case urgentTasks:
+        return colors.urgentTasks;
+      case importantTasks:
+        return colors.importantTasks;
+      case otherTasks:
+        return colors.otherTasks;
+    }
+  };
+
+  const getBackgroundColor = (taskType: any) => {
+    switch (taskType) {
+      case urgentImportantTasks:
+        return backgroundColors.urgentImportantTasks;
+      case urgentTasks:
+        return backgroundColors.urgentTasks;
+      case importantTasks:
+        return backgroundColors.importantTasks;
+      case otherTasks:
+        return backgroundColors.otherTasks;
       default:
         return " ";
     }
-  };
-
-  const getSquareTitleColor = (taskType) => {
-    switch (taskType) {
-      case urgentImportantTasks:
-        return "#cb7218";
-      case urgentTasks:
-        return "#d2ae53";
-      case importantTasks:
-        return "#b0922d";
-      case otherTasks:
-        return "#5a8176";
-      default:
-        return " ";
-    }
-  };
-
-  const getBackgroundColor = (taskType) => {
-    switch (taskType) {
-      case urgentImportantTasks:
-        return "#fae8d6";
-      case urgentTasks:
-        return "#f3ebd1";
-      case importantTasks:
-        return "#ffecba";
-      case otherTasks:
-        return "#dbe6e3";
-    }
-  };
-
-  const getTasks = (taskType) => {
-    return (
-      taskType &&
-      taskType.map((task, index) => (
-        <SingleTask
-          index={index}
-          singleTask={task}
-          handleDone={handleDone}
-          handleDelete={handleDelete}
-          // isDropped={isDropped(task)}
-        />
-      ))
-    );
   };
 
   return (
     <>
-      <Box
-        sx={{
-          flexGrow: 1,
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          marginTop: 8,
-          paddingBottom: 10,
-          minHeight: 210,
-        }}
-      >
-        <Grid
-          container
-          spacing={2}
-          sx={{ width: { lg: "64%", md: "80%", xs: "90%" } }}
-        >
+      <Box sx={styles.boxContainer}>
+        <Grid container spacing={2} sx={styles.gridContainer}>
           {taskTypes &&
             taskTypes.map((taskType, index) => (
               <Grid
                 item
                 xs={6}
-                style={{
-                  backgroundColor: getBackgroundColor(taskType),
-                  border: "4px solid #282c34",
-                }}
-                // ref={drop}
+                sx={styles.gridItem}
+                style={{backgroundColor: getBackgroundColor(taskType)}}
               >
                 <Typography
                   variant="h6"
-                  sx={{ pb: 2, color: getSquareTitleColor(taskType) }}
+                  sx={{ pb: 2, color: getColor(taskType) + "1)" }}
                 >
-                  {getSquareTitle(taskType)} ssssquare index:{index}
+                  {getSquareTitle(taskType)}
                 </Typography>
                 <Square
                   tasks={taskType}
                   handleDone={handleDone}
                   handleDelete={handleDelete}
+                  handleEdit={handleEdit}
                   accept={[ItemTypes.DIV]}
-                  lastDroppedItem={null}
                   onDrop={(item) => handleDrop(index, item)}
                   key={index}
                 />

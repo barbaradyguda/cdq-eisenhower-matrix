@@ -7,24 +7,24 @@ export let initialValuesUI: Task[] = [
     important: true,
     id: 1,
     title: "Respond to angry customer",
-    comment: "Angry custromer made a complaint about the slow handling of his order",
+    comment:
+      "Angry custromer made a complaint about the slow handling of his order",
     deadline: new Date(),
     category: "customer service",
     isDone: false,
-    accepts: [ItemTypes.DIV], 
-    lastDroppedItem: null
+    accepts: [ItemTypes.DIV],
   },
   {
     urgent: true,
     important: true,
     id: 2,
     title: "Send an offer to Audi",
-    comment: "offer prepared by Mrs. Elżbieta Białkiewicz - correction required before sending the email.",
+    comment:
+      "offer prepared by Mrs. Elżbieta Białkiewicz - correction required before sending the email.",
     deadline: new Date(),
     category: "customer service",
     isDone: false,
-    accepts: [ItemTypes.DIV], 
-    lastDroppedItem: null
+    accepts: [ItemTypes.DIV],
   },
 ];
 
@@ -34,12 +34,12 @@ export let initialValuesU: Task[] = [
     important: false,
     id: 3,
     title: "Hire new employee",
-    comment: "A designers team really NEEDS someone to help with flowers shop website",
+    comment:
+      "A designers team really NEEDS someone to help with flowers shop website",
     deadline: new Date(),
     category: "employees",
     isDone: false,
-    accepts: [ItemTypes.DIV], 
-    lastDroppedItem: null
+    accepts: [ItemTypes.DIV],
   },
   {
     urgent: true,
@@ -50,8 +50,7 @@ export let initialValuesU: Task[] = [
     deadline: new Date(),
     category: "meetings",
     isDone: false,
-    accepts: [ItemTypes.DIV], 
-    lastDroppedItem: null
+    accepts: [ItemTypes.DIV],
   },
 ];
 
@@ -63,8 +62,7 @@ export let initialValuesI: Task[] = [
     title: "Learn about SEO",
     category: "education",
     isDone: false,
-    accepts: [ItemTypes.DIV], 
-    lastDroppedItem: null
+    accepts: [ItemTypes.DIV],
   },
   {
     urgent: false,
@@ -73,8 +71,7 @@ export let initialValuesI: Task[] = [
     title: "Find new personal trainer",
     category: "sport",
     isDone: false,
-    accepts: [ItemTypes.DIV], 
-    lastDroppedItem: null
+    accepts: [ItemTypes.DIV],
   },
 ];
 
@@ -87,8 +84,7 @@ export let initialValuesO: Task[] = [
     comment: "philips?",
     category: "private",
     isDone: false,
-    accepts: [ItemTypes.DIV], 
-    lastDroppedItem: null
+    accepts: [ItemTypes.DIV],
   },
   {
     urgent: false,
@@ -97,7 +93,6 @@ export let initialValuesO: Task[] = [
     title: "Read new articles on uxdesign.",
     category: "education",
     isDone: false,
-    accepts: [ItemTypes.DIV], 
-    lastDroppedItem: null
+    accepts: [ItemTypes.DIV],
   },
 ];

@@ -12,53 +12,5 @@
   text-transform: uppercase;
 }
 
-.Form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.Input {
-  display: flex;
-  width: 64%;
-  align-items: center;
-  padding: 8px 24px;
-  border-radius: 32px 0px 0px 32px;
-  border: none;
-}
-
-.Input:focus {
-  outline: none;
-}
-
-.Button {
-  color: #424242;
-  background-color: #ffc107;
-  padding: 20px 30px;
-  border-radius: 0px 32px 32px 0px;
-  border: none;
-}
-
-.TaskList {
-  padding: 16px;
-}
-
-.Task {
-  color: white;
-  text-align: left;
-}
-
-.Square:hover {
-  box-shadow: 0 0 5px white;
-  transform: scale(1.01)
-}
-
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
-/* @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-} */
