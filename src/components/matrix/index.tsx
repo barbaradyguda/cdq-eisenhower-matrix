@@ -259,6 +259,7 @@ const Matrix = ({
                 md={6}
                 sx={styles.gridItem}
                 style={{backgroundColor: getBackgroundColor(taskType)}}
+                key={index}
               >
                 <Typography
                   variant="h6"
@@ -272,7 +273,7 @@ const Matrix = ({
                   handleDelete={handleDelete}
                   accept={[ItemTypes.DIV]}
                   onDrop={(item) => handleDrop(index, item)}
-                  key={index}
+                
                 />
               </Grid>
             ))}
