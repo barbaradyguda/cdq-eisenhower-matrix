@@ -30,6 +30,8 @@ const Matrix = ({
   otherTasks,
   setOtherTasks,
 }: Props) => {
+  const [droppedTasks, setDroppedTasks] = useState<Task[]>([]);
+
   let taskTypes: Array<Task[]> = [
     urgentImportantTasks,
     urgentTasks,
@@ -37,120 +39,57 @@ const Matrix = ({
     otherTasks,
   ];
 
-  interface ContainerState {
-    accepts: string[];
-    lastDroppedItem: any;
-    id: number;
-  }
-
-  // type test = Person & {
-  //   city: string;
-  // };
-
-  const [containers, setContainers] = useState<ContainerState[]>([
-    {
-      accepts: [ItemTypes.DIV],
-      lastDroppedItem: null,
-      id: 0,
-    },
-    {
-      accepts: [ItemTypes.DIV],
-      lastDroppedItem: null,
-      id: 1,
-    },
-    {
-      accepts: [ItemTypes.DIV],
-      lastDroppedItem: null,
-      id: 2,
-    },
-    {
-      accepts: [ItemTypes.DIV],
-      lastDroppedItem: null,
-      id: 3,
-    },
-  ]);
-
-  const [{ isOver }, drop] = useDrop(() => ({
+  const [drop] = useDrop(() => ({
     accept: ItemTypes.DIV,
-    lastDropItem: null,
-    drop: (item: any, monitor) => {
+    drop: (item: any) => {
       handleDrop(item.id, item);
     },
-    collect: (monitor: any) => ({
-      isOver: !!monitor.isOver(),
-      // canDrop: monitor.canDrop,
-    }),
   }));
 
-  const [droppedTasks, setDroppedTasks] = useState<Task[]>([]);
-
-  function isDropped(task: Task) {
-    // return droppedTasks.indexOf(task) > -1;
-    return true;
-  }
-
   const handleDrop = useCallback(
-    (index, item: any) => {
-      setDroppedTasks((droppedTasks[0] = item.singleTask));
+    (index: number, item: any) => {
+      let droppedTask = droppedTasks[0];
+      setDroppedTasks((droppedTask = item.singleTask));
+
       {
-        item.singleTask.urgent &&
-          item.singleTask.important &&
+        droppedTask.urgent &&
+          droppedTask.important && index !== 0 &&
           setUrgentImportantTasks(
             urgentImportantTasks.filter(
-              (urgentImportantTask) =>
-                urgentImportantTask.id !== item.singleTask.id
+              (urgentImportantTask) => urgentImportantTask.id !== droppedTask.id
             )
           );
       }
       {
-        item.singleTask.urgent &&
+        droppedTask.urgent && index !== 1 &&
           setUrgentTasks(
-            urgentTasks.filter(
-              (urgentTask) => urgentTask.id !== item.singleTask.id
-            )
+            urgentTasks.filter((urgentTask) => urgentTask.id !== droppedTask.id)
           );
       }
       {
-        item.singleTask.important &&
+        droppedTask.important && index !== 2 &&
           setImportantTasks(
             importantTasks.filter(
-              (importantTask) => importantTask.id !== item.singleTask.id
+              (importantTask) => importantTask.id !== droppedTask.id
             )
           );
       }
       {
-        !item.singleTask.urgent &&
-          !item.singleTask.important &&
+        !droppedTask.urgent &&
+          !droppedTask.important && index !== 3 &&
           setOtherTasks(
-            otherTasks.filter(
-              (otherTask) => otherTask.id !== item.singleTask.id
-            )
+            otherTasks.filter((otherTask) => otherTask.id !== droppedTask.id)
           );
       }
       switch (index) {
         case 0:
-          droppedTasks[0].urgent = true;
-          droppedTasks[0].important = true;
-          droppedTasks[0].deadline = new Date();
-          return setUrgentImportantTasks([
-            ...urgentImportantTasks,
-            droppedTasks[0],
-          ]);
+          return collectDroppedUITask(droppedTask);
         case 1:
-          droppedTasks[0].urgent = true;
-          droppedTasks[0].important = false;
-          droppedTasks[0].deadline = new Date();
-          return setUrgentTasks([...urgentTasks, droppedTasks[0]]);
+          return collectDroppedUTask(droppedTask);
         case 2:
-          droppedTasks[0].urgent = false;
-          droppedTasks[0].important = true;
-          droppedTasks[0].deadline = undefined;
-          return setImportantTasks([...importantTasks, droppedTasks[0]]);
+          return collectDroppedITask(droppedTask);
         case 3:
-          droppedTasks[0].urgent = false;
-          droppedTasks[0].important = false;
-          droppedTasks[0].deadline = undefined;
-          return setOtherTasks([...otherTasks, droppedTasks[0]]);
+          return collectDroppedOTask(droppedTask);
       }
     },
     [
@@ -161,6 +100,42 @@ const Matrix = ({
       otherTasks,
     ]
   );
+
+  const collectDroppedUITask = (droppedTask: Task) => {
+    if (!droppedTask.urgent || !droppedTask.important) {
+      droppedTask.urgent = true;
+      droppedTask.important = true;
+      droppedTask.deadline = new Date();
+      return setUrgentImportantTasks([...urgentImportantTasks, droppedTask]);
+    } else return urgentImportantTasks;
+  };
+
+  const collectDroppedUTask = (droppedTask: Task) => {
+    if(!droppedTask.urgent || droppedTask.important){
+      droppedTask.urgent = true;
+    droppedTask.important = false;
+    droppedTask.deadline = new Date();
+    return setUrgentTasks([...urgentTasks, droppedTask]);}
+    else return urgentTasks
+  };
+
+  const collectDroppedITask = (droppedTask: Task) => {
+    if(!droppedTask.important || droppedTask.urgent){
+    droppedTask.urgent = false;
+    droppedTask.important = true;
+    droppedTask.deadline = undefined;
+    return setImportantTasks([...importantTasks, droppedTask]);}
+    else return importantTasks
+  };
+
+  const collectDroppedOTask = (droppedTask: Task) => {
+    if(droppedTask.important || droppedTask.urgent){
+    droppedTask.urgent = false;
+    droppedTask.important = false;
+    droppedTask.deadline = undefined;
+    return setOtherTasks([...otherTasks, droppedTask]);}
+    else return otherTasks
+  };
 
   const handleDone = (id: number, singleTask: Task) => {
     {
