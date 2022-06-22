@@ -13,10 +13,9 @@ interface Props {
   singleTask: Task;
   handleDone: (id: number, singleTask: Task) => void;
   handleDelete: (id: number, singleTask: Task) => void;
-  handleEdit: (id: number, singleTask: Task) => void;
 }
 
-const SingleTask = ({ index, singleTask, handleDone, handleDelete, handleEdit }: Props) => {
+const SingleTask = ({ index, singleTask, handleDone, handleDelete }: Props) => {
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: ItemTypes.DIV,
@@ -84,13 +83,13 @@ const SingleTask = ({ index, singleTask, handleDone, handleDelete, handleEdit }:
           <span />
         )}
         <Stack direction="row" alignItems="center" spacing={1}>
-          <IconButton
+        {/* {!singleTask.isDone &&  <IconButton
             aria-label="delete"
             size="small"
             onClick={() => handleEdit(singleTask.id, singleTask)}
           >
             <Edit sx={{ color: getColor(singleTask) + "0.9)" }} />
-          </IconButton>
+          </IconButton>} */}
           <IconButton
             aria-label="delete"
             size="small"

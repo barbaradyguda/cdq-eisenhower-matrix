@@ -8,13 +8,12 @@ import { styles } from "./styles";
 interface Props {
   handleDone: (id: number, singleTask: Task) => void;
   handleDelete: (id: number, singleTask: Task) => void;
-  handleEdit: (id: number, singleTask: Task) => void;
   tasks: Task[];
   accept: string[];
   onDrop: (item: any) => void;
 }
 
-const Square = ({ handleDone, handleDelete, handleEdit, tasks, accept, onDrop }: Props) => {
+const Square = ({ handleDone, handleDelete, tasks, accept, onDrop }: Props) => {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept,
     drop: onDrop,
@@ -33,7 +32,6 @@ const Square = ({ handleDone, handleDelete, handleEdit, tasks, accept, onDrop }:
             singleTask={task}
             handleDone={handleDone}
             handleDelete={handleDelete}
-            handleEdit={handleEdit}
             key={index}
           />
         ))}

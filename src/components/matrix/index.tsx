@@ -131,12 +131,7 @@ const Matrix = ({
     } else return otherTasks;
   };
 
-
-const handleEdit=(id: number, singleTask: Task)=>{
-console.log(singleTask)
-}
-
-
+  
   const handleDone = (id: number, singleTask: Task) => {
     {
       singleTask.urgent &&
@@ -260,7 +255,8 @@ console.log(singleTask)
             taskTypes.map((taskType, index) => (
               <Grid
                 item
-                xs={6}
+                xs={12}
+                md={6}
                 sx={styles.gridItem}
                 style={{backgroundColor: getBackgroundColor(taskType)}}
               >
@@ -274,7 +270,6 @@ console.log(singleTask)
                   tasks={taskType}
                   handleDone={handleDone}
                   handleDelete={handleDelete}
-                  handleEdit={handleEdit}
                   accept={[ItemTypes.DIV]}
                   onDrop={(item) => handleDrop(index, item)}
                   key={index}

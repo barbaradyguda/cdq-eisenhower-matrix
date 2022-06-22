@@ -4,8 +4,8 @@ export const styles = {
     width: "100%",
     display: "flex",
     justifyContent: "center",
-    marginTop: 8,
-    paddingBottom: 10,
+    mt: 4,
+    paddingBottom: 3,
     minHeight: 210,
   },
   gridContainer: {
@@ -18,7 +18,7 @@ export const styles = {
   squareBox: {
     width: "100%",
     minHeight: 120,
-    height: "100%",
+    height: "88%"
   },
   taskContainer: {
     display: "flex",

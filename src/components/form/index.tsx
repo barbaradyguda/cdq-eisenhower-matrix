@@ -127,6 +127,9 @@ const Form = ({
     handleClose();
   };
 
+
+  
+
   return (
     <>
       <Button variant="contained" onClick={handleOpen} sx={styles.addButton}>
@@ -136,12 +139,13 @@ const Form = ({
 
       <Modal open={open} onClose={handleClose} aria-labelledby="add-task">
         <Box sx={styles.modalBox}>
-          <form className="Form" id="form" onSubmit={handleAdd}>
+          <form id="form" onSubmit={handleAdd}>
             <Typography
               id="server-modal-title"
               variant="h5"
               color="primary"
-              sx={{ mb: 2 }}
+              sx={{ mb: 2, textAlign: "center", pt:{ lg: 0, md: 0, xs: 2 },
+            }}
             >
               Add a new task
             </Typography>
